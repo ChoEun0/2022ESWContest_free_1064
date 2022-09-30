@@ -155,7 +155,7 @@ void loop() {
   delayMicroseconds(10);     
   digitalWrite(trig, LOW);
   duration = pulseIn(echo, HIGH);
-  distance = ((float)(340 * duration) / 10000) /2;  
+  distance2 = ((float)(340 * duration) / 10000) /2;  
 
   //자이로
   i++;
@@ -168,7 +168,7 @@ void loop() {
   getDT();
 
   
-  accelX = atan(AcY / sqrt(pow(AcX, 2) + pow(AcZ, 2)));
+  accelX = atan(AcY / sqrt(pow(AcX, 2) + pow(AcZ, 2)));  //오일러 각
   accelX *= RADIAN_TO_DEGREE;
   accelY = atan(-AcX / sqrt(pow(AcY, 2) + pow(AcZ, 2)));
   accelY *= RADIAN_TO_DEGREE;
@@ -190,7 +190,9 @@ void loop() {
     bt.print(angle_Y);
     bt.print(",");
     bt.println();
-   }
+  }
+  else{
+  }
         
   //flowchart 시작
   if (fsr > 100){
@@ -198,34 +200,36 @@ void loop() {
     Serial.println(String("압력이 감지되었습니다. ( ") + fsr + String(" )")); 
     if(velocity > 0){
       j++;
-      Serial.print("j : ");
-      Serial.println(j);
       if(j == 5){   
         
         if (10 < angle_X < 20 || -20 < angle_X < -10){
-          Serial.println("경사가 있습니다. 안전보조장치 START");
+          Serial.println("경사가 있습니다. 안전보조장치 1 START");
           //안전보조장치 -> 자이로 출력 각도에 따라 서보 각도가 달라짐
-          servo1.write(80);
-          servo2.write(80);
-          servo3.write(150);
-          servo4.write(120);
+          servo1.write(75);
+          servo2.write(60);
+          servo3.write(165);
+          servo4.write(135);
                  
         }
         else if(20 < angle_X < 40 || -40 < angle_X < -20 ){
+           Serial.println("경사가 있습니다. 안전보조장치 2");
            servo1.write(70);
-           servo2.write(70);
-           servo3.write(160);
-           servo4.write(130);
-        }
-        else if( angle_X > 40 || angle_X < -40){
-           servo1.write(60);
            servo2.write(60);
            servo3.write(165);
            servo4.write(135);
         }
-        delay(500);  
-        j=0;  
+        else if( angle_X > 40 || angle_X < -40){
+           Serial.println("경사가 있습니다. 안전보조장치 3");
+           servo1.write(60);
+           servo2.write(60);
+           servo3.write(165);
+           servo4.write(135);
+        } 
+        j = 0;  
       }
+      
+    }
+    else{
       
     }
   }
@@ -248,33 +252,20 @@ void loop() {
         Serial.println("경사가 있습니다. 장애물 감지를 시작합니다.");
         Serial.println(String("장애물과의 거리 : ") + distance + String(" cm"));
         
-        if(distance < 70){  //4경사기울기ㅇ -> 장애물ㅇ -> 브레이크 경사에 따라 서서히 작동(continue)
+        if(distance2 < 70){  //4경사기울기ㅇ -> 장애물ㅇ -> 브레이크 경사에 따라 서서히 작동(continue)
           Serial.println("장애물 근접. 브레이크를 작동합니다.");  
 
           if(5 < angle_X < 10 || -10 < angle_X < -5){         
-            servo1.write(3);
-            servo2.write(3);
-            servo3.write(178);
-            servo4.write(178); 
-            delay(200); 
+            
             servo1.write(0);
             servo2.write(0);
             servo3.write(180);
             servo4.write(180);
             delay(10000);
-         
+             
           }            
           else if(10 < angle_X < 20 || -20 < angle_X < -10){
-            servo1.write(5);
-            servo2.write(5);
-            servo3.write(175);
-            servo4.write(175);
-            delay(200);
-            servo1.write(3);
-            servo2.write(3);
-            servo3.write(178);
-            servo4.write(178); 
-            delay(200);
+          
             servo1.write(0);
             servo2.write(0);
             servo3.write(180);
@@ -283,26 +274,7 @@ void loop() {
            
           }
           else if(20 < angle_X < 40 || -40 < angle_X < -20 ){
-            servo1.write(5);
-            servo2.write(5);
-            servo3.write(175);
-            servo4.write(175);
-            delay(200);
-            servo1.write(4);
-            servo2.write(4);
-            servo3.write(176);
-            servo4.write(176);
-            delay(200);
-            servo1.write(3);
-            servo2.write(3);
-            servo3.write(178);
-            servo4.write(178); 
-            delay(200);
-            servo1.write(2);
-            servo2.write(2);
-            servo3.write(179);
-            servo4.write(179);
-            delay(200);
+         
             servo1.write(0);
             servo2.write(0);
             servo3.write(180);
@@ -311,135 +283,57 @@ void loop() {
           
           }
           else if( angle_X > 40 || angle_X < -40){
-            servo1.write(5);
-            servo2.write(5);
-            servo3.write(175);
-            servo4.write(175);
-            delay(200);
-            servo1.write(3);
-            servo2.write(3);
-            servo3.write(177);
-            servo4.write(177); 
-            delay(200);
-            servo1.write(2);
-            servo2.write(2);
-            servo3.write(178);
-            servo4.write(178);
-            delay(200);
-            servo1.write(1);
-            servo2.write(1);
-            servo3.write(179);
-            servo4.write(179);
-            delay(200);
+           
             servo1.write(0);
             servo2.write(0);
             servo3.write(180);
             servo4.write(180);
             delay(10000);
-            
+         
           }
-          delay(500);    
+        
    
         }
-        else{  //4경사기울기ㅇ -> 장애물x -> 장애물 감지x 누적 5회시 브레이크 작동(continue)
+        else{  //4경사기울기ㅇ -> 장애물x -> 장애물 감지x 누적 시 브레이크 작동(continue)
           k++;
-          Serial.print("k : ");
-          Serial.println(k);
-          if(k == 30){
+          if(k == 10){
             if(5 < angle_X < 10 || -10 < angle_X < -5){         
-            servo1.write(3);
-            servo2.write(3);
-            servo3.write(178);
-            servo4.write(178); 
-            delay(200);
+            
             servo1.write(0);
             servo2.write(0);
             servo3.write(180);
             servo4.write(180);
             delay(10000);
-             
+        
           }            
           else if(10 < angle_X < 20 || -20 < angle_X < -10){
-            servo1.write(5);
-            servo2.write(5);
-            servo3.write(175);
-            servo4.write(175);
-            delay(200);
-            servo1.write(3);
-            servo2.write(3);
-            servo3.write(178);
-            servo4.write(178); 
-            delay(200);
+           
             servo1.write(0);
             servo2.write(0);
             servo3.write(180);
             servo4.write(180);
             delay(10000);  
-            
+ 
           } 
             else if(20 < angle_X < 40 || -40 < angle_X < -20 ){
-              servo1.write(5);
-              servo2.write(5);
-              servo3.write(175);
-              servo4.write(175);
-              delay(200);
-              servo1.write(4);
-              servo2.write(4);
-              servo3.write(176);
-              servo4.write(176);
-              delay(200);
-              servo1.write(3);
-              servo2.write(3);
-              servo3.write(178);
-              servo4.write(178); 
-              delay(200);
-              servo1.write(2);
-              servo2.write(2);
-              servo3.write(179);
-              servo4.write(179);
-              delay(200);
+            
               servo1.write(0);
               servo2.write(0);
               servo3.write(180);
               servo4.write(180);
               delay(10000); 
-              
+         
             }
             else if( angle_X > 40 || angle_X < -40){
-              servo1.write(5);
-              servo2.write(5);
-              servo3.write(175);
-              servo4.write(175);
-              delay(500);
-              servo1.write(4);
-              servo2.write(4);
-              servo3.write(176);
-              servo4.write(176);
-              delay(300);
-              servo1.write(3);
-              servo2.write(3);
-              servo3.write(177);
-              servo4.write(177); 
-              delay(200);
-              servo1.write(2);
-              servo2.write(2);
-              servo3.write(178);
-              servo4.write(178);
-              delay(200);
-              servo1.write(1);
-              servo2.write(1);
-              servo3.write(179);
-              servo4.write(179);
-              delay(200);
+             
               servo1.write(0);
               servo2.write(0);
               servo3.write(180);
               servo4.write(180);
               delay(10000);
-              
-             
+            
             }
-            k=0;  
+            k = 0;  
           }
         }
       }
@@ -448,7 +342,7 @@ void loop() {
         Serial.println("평지입니다. 장애물 감지를 시작합니다.");
         Serial.println(String("장애물과의 거리 : ") + distance + String(" cm"));
   
-        if(distance < 50){  //4경사기울기x -> 장애물ㅇ -> 브레이크 작동(3sec)
+        if(distance2 < 50){  //4경사기울기x -> 장애물ㅇ -> 브레이크 작동(3sec)
           Serial.println("장애물 근접. 브레이크를 작동합니다.");  
   
           servo1.write(0);
@@ -457,18 +351,16 @@ void loop() {
           servo4.write(180);
           delay(3000);    
         }
-        else{  //4경사기울기x -> 장애물x -> 장애물 감지x 누적 5회시 브레이크 작동(3sec)
+        else{  //4경사기울기x -> 장애물x -> 장애물 감지x 누적 시 브레이크 작동(3sec)
           l++;
-          Serial.print("l : ");
-          Serial.println(l);
-          if(l == 30){
+          if(l == 10){
             Serial.println("누적 30회. 브레이크를 작동합니다.");
             servo1.write(0);
             servo2.write(0);
             servo3.write(180);
             servo4.write(180);
             delay(3000);  
-            l =0;
+            l = 0;
           }
               
         }
@@ -479,27 +371,20 @@ void loop() {
       //WAS 기울기 감지
       Serial.print("기울기를 확인합니다 : ");
       Serial.println(angle_Y);
-
-        
-  
      
-      if(40 <= angle_Y && angle_Y<= 45 || -45 < angle_Y && angle_Y < -40){  //WAS 기울기 -> +-50이상이면 부저&블루투스 알림
-        m++;
-        if(m == 5){
+      if(40 <= angle_Y && angle_Y<= 45 || -45 < angle_Y && angle_Y < -40){  //WAS 기울기 -> +-40-45면 PUSH알림
+        
           Serial.println("WARNING. Please grab handle. PUSH");
-          m = 0;
-        }      
+              
       }
-      else if(angle_Y > 45 || angle_Y < -45){  //WAS 기울기 -> +-45up -> WAS falling
-        n++;
-        if(n = 3){
+      else if(angle_Y > 45 || angle_Y < -45){  //WAS 기울기 -> +-45up -> 부저 작동
+        
           Serial.println("WAS falling. Buzzer On");
           digitalWrite(buzzerPin, HIGH);
           delay(1000);
-          digitalWrite(buzzerPin, LOW);  
+          digitalWrite(buzzerPin, LOW);    
           delay(500);
-          n = 0;  
-        }
+          
       }
     
       
