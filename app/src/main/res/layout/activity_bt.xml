@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".MainActivity"
+android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+
+        <ImageButton
+            android:id="@+id/home"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@mipmap/logo3_round" />
+
+        <TextView
+            android:id="@+id/btStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/home"
+            android:layout_toRightOf="@+id/home"
+            android:background="@color/white"
+            android:hint=" 블루투스 연결 상태 "
+            android:layout_marginTop="5dp"
+            android:textSize="38dp"
+            android:textStyle="bold"
+            android:gravity="center|left" />
+
+
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnBtOn"
+            android:layout_width="130dp"
+            android:layout_height="110dp"
+            android:layout_margin="30dp"
+            android:textSize="33dp"
+            android:text="블루투스 켜기"
+            android:layout_marginTop="30dp"
+            android:background="#F08080"/>
+
+
+        <Button
+            android:id="@+id/btnBtOff"
+            android:layout_width="130dp"
+            android:layout_height="110dp"
+            android:layout_marginTop="30dp"
+            android:layout_toRightOf="@+id/btnBtOn"
+            android:textSize="33dp"
+            android:text="블루투스 끄기"
+            android:background="#F08080"/>
+
+
+    </RelativeLayout>
+
+
+
+    <Button
+        android:id="@+id/btConnect"
+        android:layout_width="295dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="30dp"
+        android:text="연결하기"
+        android:background="#F08080"
+        android:textSize="35dp"/>
+
+
+    <TextView
+        android:id="@+id/temp"
+        android:layout_width="295dp"
+        android:layout_height="50dp"
+        android:textSize ="40dp"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="30dp"
+        android:hint="각도"/>
+
+
+
+</LinearLayout>
